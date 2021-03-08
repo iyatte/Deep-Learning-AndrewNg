@@ -19,8 +19,8 @@ def load_data(path, x_flag, y_flag):
     return x_data, y_data
 
 
-train_x, train_y = load_data('./raw_data/1_2/train_catvnoncat.h5', 'train_set_x', 'train_set_y')
-test_x, test_y = load_data('./raw_data/1_2/test_catvnoncat.h5', 'test_set_x', 'test_set_y')
+train_x, train_y = load_data('./raw_data/train_catvnoncat.h5', 'train_set_x', 'train_set_y')
+test_x, test_y = load_data('./raw_data/test_catvnoncat.h5', 'test_set_x', 'test_set_y')
 # look the picture
 # plt.imshow(train_x[24])
 
