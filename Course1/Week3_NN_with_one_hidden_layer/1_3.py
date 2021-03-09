@@ -165,7 +165,7 @@ def nn_predict(parameters, X):
 
 arameters = nn_model(X, Y, 4, 10000, True)
 
-plot_decision_boundary(lambda x: nn_predict(arameters, X.T), X, Y)
+plot_decision_boundary(lambda x: nn_predict(arameters, x.T), X, Y)
 
 y_pre = nn_predict(arameters, X)
 
