@@ -228,20 +228,17 @@ def backward_propagation_n(X, Y, cache):
     (Z1, A1, W1, b1, Z2, A2, W2, b2, Z3, A3, W3, b3) = cache
 
     dZ3 = A3 - Y
-    dW3 = (1. / m) * np.dot(dZ3, A2.T)
     dW3 = 1. / m * np.dot(dZ3, A2.T)
     db3 = 1. / m * np.sum(dZ3, axis=1, keepdims=True)
 
     dA2 = np.dot(W3.T, dZ3)
     dZ2 = np.multiply(dA2, np.int64(A2 > 0))
-    # dW2 = 1. / m * np.dot(dZ2, A1.T) * 2  # Should not multiply by 2
     dW2 = 1. / m * np.dot(dZ2, A1.T)
     db2 = 1. / m * np.sum(dZ2, axis=1, keepdims=True)
 
     dA1 = np.dot(W2.T, dZ2)
     dZ1 = np.multiply(dA1, np.int64(A1 > 0))
     dW1 = 1. / m * np.dot(dZ1, X.T)
-    # db1 = 4. / m * np.sum(dZ1, axis=1, keepdims=True) # Should not multiply by 4
     db1 = 1. / m * np.sum(dZ1, axis=1, keepdims=True)
 
     gradients = {"dZ3": dZ3, "dW3": dW3, "db3": db3,
@@ -278,12 +275,12 @@ def gradient_check_n(parameters, gradients, X, Y, epsilon=1e-7):
         # cal  J_plus [i]. input：“parameters_values，epsilon”. output=“J_plus [i]”
         thetaplus = np.copy(parameters_values)  # Step 1
         thetaplus[i][0] = thetaplus[i][0] + epsilon  # Step 2
-        J_plus[i], cache = forward_propagation_n(X, Y, vector_to_dictionary(thetaplus))  # Step 3 ，cache用不到
+        J_plus[i], cache = forward_propagation_n(X, Y, vector_to_dictionary(thetaplus))
 
         # cal J_minus [i]. input:“parameters_values，epsilon”. output=“J_minus [i]”。
         thetaminus = np.copy(parameters_values)  # Step 1
         thetaminus[i][0] = thetaminus[i][0] - epsilon  # Step 2
-        J_minus[i], cache = forward_propagation_n(X, Y, vector_to_dictionary(thetaminus))  # Step 3 ，cache用不到
+        J_minus[i], cache = forward_propagation_n(X, Y, vector_to_dictionary(thetaminus))
 
         # cal gradapprox[i]
         gradapprox[i] = (J_plus[i] - J_minus[i]) / (2 * epsilon)
