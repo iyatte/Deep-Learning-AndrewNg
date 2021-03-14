@@ -50,13 +50,13 @@ We can see that the error starts to get very high.This is because the output of 
 So in general, initializing weights to be very large doesn't really work very well.
 ### 3.3 add a formula
 When initialize a W, we can time a formula:\
-if the active is Relu, the formula is $np.sqrt( \frac {2} {n^{[l-1]}} )$
+if the active is Relu, the formula is  $np.sqrt( \frac {2} {n^{[l-1]}} )$ 
 
-if the active is tanh, the formula is $\sqrt( \frac {2} {n^{[l-1]}})$
+if the active is tanh, the formula is  $\sqrt( \frac {2} {n^{[l-1]}})$ 
 
 ## 4 Gradient checking
 
-$$d\theta_{approx}[i] = \frac {J(\theta_1, theta_2, theta_3 + \epsilon, ...) - J(\theta_1, theta_2, theta_3 - \epsilon, ...)} {2\epsilon}$$
+$$d\theta_{approx}[i] = \frac {J(\theta_1, theta_2, theta_3 + \epsilon, ...) - J(\theta_1, theta_2, theta_3 - \epsilon, ...)} {2\epsilon}$$  
 
 checking following:
-$$\frac{||d\theta_{approx}-d\theta||_2}{||d\theta_{approx}||_2+||d\theta||_2}$$
+$$\frac{||d\theta_{approx}-d\theta||_2}{||d\theta_{approx}||_2+||d\theta||_2}$$  
