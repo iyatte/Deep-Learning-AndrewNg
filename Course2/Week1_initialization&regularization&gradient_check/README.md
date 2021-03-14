@@ -58,5 +58,5 @@ if the active is tanh, the formula is  $\sqrt( \frac {2} {n^{[l-1]}})$
 
 $$d\theta_{approx}[i] = \frac {J(\theta_1, theta_2, theta_3 + \epsilon, ...) - J(\theta_1, theta_2, theta_3 - \epsilon, ...)} {2\epsilon}$$  
 
-checking following:
+checking following:  
 $$\frac{||d\theta_{approx}-d\theta||_2}{||d\theta_{approx}||_2+||d\theta||_2}$$  
