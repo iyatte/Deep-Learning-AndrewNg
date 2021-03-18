@@ -7,7 +7,7 @@
 
 from utils.opt_utils import *
 from adam import *
-from exponentially_weighted_averages import *
+from gradient_descent_with_momentum import *
 from mini_batch import *
 
 

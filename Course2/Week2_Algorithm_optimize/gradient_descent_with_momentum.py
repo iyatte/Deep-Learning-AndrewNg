@@ -2,7 +2,7 @@
 """
 @Time    : 2021/3/17 16:16
 @Author  : yany
-@File    : exponentially_weighted_averages.py
+@File    : gradient_descent_with_momentum.py
 """
 from utils.testCase import *
 

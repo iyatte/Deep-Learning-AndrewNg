@@ -1,62 +1,63 @@
-Course 2-Week 1
+Course 2-Week 2
 =========
 
-## 1 Regularization
-### 1.1 Purpose
-In order to avoid the over-fitting, we have two method to do, one is adding more data, another is regularization.  
+## Optimization algorithm
+### 1 Mini-batch gradient descent
+Divide the data into m data to be trained in turn.
 
-### 1.2 Why regularization reduces over-fitting?
-The intuitive understanding is that if the regularization λ is set large enough, the weight matrix W is set to a value close to 0. We try to eliminate or at least reduce the influence of many hidden units and eventually the network becomes simpler, the neural network gets closer and closer to logistic regression, we intuitively think that a large number of hidden units are completely eliminated, but in fact they are not, in fact all the hidden units of the neural network are still there, but their influence becomes smaller. The neural network becomes simpler and seems to be less prone to overfitting. 
+For a general neural network model, using Batch gradient descent, the cost is decreasing as the number of iterations increases. However, with Mini-batch gradient descent, instead of a monotonic decrease in cost as training is iterated over different mini-batches, the cost oscillates, subject to a noise-like effect. However, the overall trend is decreasing, and eventually a lower cost value is obtained.  
 
-### 1.3 L1 & L2 Norm
-L1 Norm is easy to cause the data sparseness.\
-Actually, "the regularizaton" is equal to "with constraints".\
-The picture as following, it's the L1 & L2's solution space.\
-![L1 & L2 solution space](./raw_data/1.jpg)
+![mini batch](./raw_data/mini_batch.png)  
+
+The reason for the subtle oscillations is that there are differences between the different mini-batches. For example, the first subset ($X^1,Y^1$) may be a good subset, while the second subset ($X^2,Y^2$) contains some noisy noises.
+
+In general, if the overall sample size m is not too large, e.g. m ≤ 2000, it is recommended to use Batch gradient descent. if the overall sample size m is large, it is recommended to divide the sample into many mini-batches. the recommended mini-batch sizes are 64, 128, 256, 512. are all powers of 2. The reason for this is that computers generally store data to the power of 2 and this will increase the speed of computing.
+
+### 2 exponentially_weighted_averages
+
+#### 2.2 Exponentially weighted averages
+The formular is
+$$V_t = \beta V_{t-1} + (1- \beta)$$
+and the $\beta$ determines the number of days of the weighted average, the day is:
+$$\frac{1}{1-\beta}$$
+
+But, there is a problem:
+![ewa plot](./raw_data/ewa_1.png)
+
+We notice that the difference between the purple curve and the green curve is that the purple curve starts off relatively lower. This is because we set $V_0$=0 at the beginning, so the initial value is relatively small until it tapers off and becomes normalised by the preceding effects.
+
+The way to correct for this is to apply a bias correction, i.e. after each calculation of $V_t$, the following equation is applied to $V_t$:
+$$\frac{V_t}{1 - \beta^t}$$
+
+At the beginning, t is relatively small, (1 - $β^t$) < 1, which corrects VtVt a little more, with the effect of lifting the beginning part of the purple curve upwards a little to nearly coincide with the green curve. As t increases, (1 - $β^t$) ≈ 1, Vt remains essentially unchanged and the purple curve still coincides with the green curve. This achieves a simple offset correction and gives us the green curve we want.
+
+It is worth mentioning that the offset correction is not necessary in machine learning. This is because, after one iteration (with a large t), $V_t$ is minimally affected by the initial value and the purple curve largely coincides with the green curve. Therefore, it is generally possible to ignore the initial iteration process and wait until after a certain number of iterations before taking the values, so that no offset correction is needed.
+
+### 3 Gradient descent with momentum
+$$V_{dW} = \beta V_{dW} + (1-\beta)dW$$
+$$V_{db} = \beta V_{db} + (1-\beta)db$$
+$$W = W - \alpha V_{dW}$$
+$$b = b - \alpha V_{db}$$
+
+Initially, let V_{dW}=0,V_{db}=0. Generally set $\beta$=0.9, i.e. the data of the first 10 days of the index weighted average, which is better for practical application.
 
 
-### 1.4 Dropout
-In order to reduce the complexity of the model, the nodes of each layer are deleted randomly.\
-It can improve the over-fitting. 
+### 4 RMSprop
 
-eg.
-```python
-import pandas as pd
-keep_prob = 0.8
-# w1 is the layer's parameter
-d1 = np.random.rand(w1.shape[0], w1.shape[1])
-d1 = keep_prob < 0.8
-w1 *= d1
-w1 /= keep_prob
-```
+![RMSprop](./raw_data/RMSprop.png)
 
-### 1.5 Others
+### 5 Adam
+![Adam](./raw_data/Adam.png)
+Adam's algorithm contains several hyperparameters, namely: $\alpha,\beta_1,\beta_2, \epsilon$. where $\beta_1$ is usually set to 0.9, $\beta_2$ is usually set to 0.999 and $\epsilon$ is usually set to 10-8. generally only $\beta_1$ and $β_2$ need to be debugged.
 
-* Data augmentation  
-For example, images can be reversed or distorted to increase training data.
+### 6 Learning rate decay
+Decreasing the learning factor $\alpha$ is also effective in increasing the training speed of a neural network, a method known as learning rate decay.
 
-* early stopping 
-you only try one time, you can find the mid-size w between small and large w, if you use L2 norm, you should try many many times.
-But when you use early stopping, the J(w, b)--loss function maybe is larger than expection, so it's the shorcoming of the early stopping.
+Learning rate decay means that the learning factor $\alpha$ decreases as the number of iterations increases. The benefits of this are illustrated in the following diagram. In the diagram below, the blue dash indicates the use of a constant learning factor $\alpha$. As $\alpha$ is the same for each training, the step length remains the same and the oscillations are larger near the optimum, oscillating over a larger range around the optimum and further away from the optimum. The green dash indicates the use of decreasing $\alpha$, where $\alpha$ decreases as the number of training sessions increases and the step length decreases, allowing for a smaller range of weak oscillations at the optimum, constantly approaching the optimum. The learning rate decay is closer to the optimum than a constant $\alpha$.
+![Learning rate decay](./raw_data/Learning_rate_decay.png)
 
-## 2 Normalizing inputs
-It can speed up the training, because after normalization, it will be the same speed which direction you start from.
 
-## 3 Initialization
-### 3.1 all zeros
-In general, zero initialization will lead to the inability of the neural network to break the symmetry. The final result is that no matter how many layers the network has, it can only get the same effect as the Logistic function.
-### 3.2 random
-We can see that the error starts to get very high.This is because the output of the last activation (sigmoid) is very close to 0 or 1 due to its large random weight, and it causes very high losses when it goes wrong.Inproperly initialized parameters can cause gradients to disappear and explode, which can also slow down the optimization algorithm.If we had trained the network for a longer period of time, we would have seen better results, but initialization with too large a random number would have slowed down the optimization.
-So in general, initializing weights to be very large doesn't really work very well.
-### 3.3 add a formula
-When initialize a W, we can time a formula:\
-if the active is Relu, the formula is $np.sqrt( \frac {2} {n^{[l-1]}} )$
+### 7 The problem of local optima
 
-if the active is tanh, the formula is $\sqrt( \frac {2} {n^{[l-1]}})$
-
-## 4 Gradient checking
-
-$$d\theta_{approx}[i] = \frac {J(\theta_1, theta_2, theta_3 + \epsilon, ...) - J(\theta_1, theta_2, theta_3 - \epsilon, ...)} {2\epsilon}$$
-
-checking following:
-$$\frac{||d\theta_{approx}-d\theta||_2}{||d\theta_{approx}||_2+||d\theta||_2}$$
+Both RMSProp and Adam algorithms can effectively solve the problem of too slow descent of *Plateaus* and greatly improve the learning speed of neural network.
+* Plateaus may slow down gradient descent, slowing down learning
