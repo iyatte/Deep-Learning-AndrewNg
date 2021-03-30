@@ -269,3 +269,6 @@ start_time = time.clock()
 parameters = model(X_train, Y_train, X_test, Y_test)
 end_time = time.clock()
 print(str(end_time - start_time) + " s" )
+
+theta = 15/50
+theta*(1-theta)/50
