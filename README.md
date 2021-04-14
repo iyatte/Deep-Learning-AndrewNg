@@ -4,6 +4,7 @@ Deep-Learning coursework
 ### [1.1 Week2_LR_with_NN_thinking](./Course1/Week2_LR_with_NN_thinking)
 ### [1.2 Week3_NN_with_one_hidden_layer](./Course1/Week3_NN_with_one_hidden_layer)
 ### [1.3 Week4_Multilayer_NN](./Course1/Week4_Multilayer_NN)
+
 ## [2 Course2](./Course2)
 ### [2.1 Week1_initialization&regularization&gradient_check](./Course2/Week1_initialization&regularization&gradient_check)
 ### [2.2 Week2_Algorithm_optimize](./Course2/Week2_Algorithm_optimize)
